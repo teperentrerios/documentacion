@@ -1,0 +1,73 @@
+@startuml
+title teper_elecciones - Diagrama entidad-relacion (alcance solicitado)
+
+hide methods
+skinparam linetype ortho
+skinparam shadowing false
+skinparam entity {
+  BackgroundColor #F8FAFC
+  BorderColor #334155
+  ArrowColor #475569
+}
+
+entity "PARTIDOS POLITICOS 2023" as Partido2023 {
+  * codigo : INT <<PK>>
+  --
+  nro_partido : VARCHAR(10)
+  descripcion : VARCHAR(255)
+  cod_jurisdiccion : INT
+  cod_localidad : INT
+  color : VARCHAR(20)
+  color_primario : VARCHAR(20)
+  color_secundario : VARCHAR(20)
+}
+
+entity "LISTAS PASO 2023" as Lista2023 {
+  * codigo : INT <<PK>>
+  --
+  cod_partido : INT <<indice>>
+  nro : VARCHAR(6)
+  descripcion : VARCHAR(255)
+  cod_jurisdiccion : INT
+  cod_cargo_electivo : INT
+  cod_seccion : INT
+  cod_localidad : INT
+  cod_estado : INT
+  bandera_generales : CHAR(1)
+}
+
+entity "CANDIDATOS PASO 2023" as Candidato2023 {
+  * codigo : INT <<PK>>
+  --
+  cod_lista : INT <<indice>>
+  cod_cargo : INT
+  orden : INT
+  apellido : VARCHAR(60)
+  nombre : VARCHAR(80)
+  nro_doc : INT
+  genero : CHAR(1)
+  cod_departamento_candidato : INT
+  cod_localidad_candidato : INT
+}
+
+' Relaciones logicas validadas con los datos, aunque no estan declaradas como FK.
+Partido2023 ||--o{ Lista2023 : "cod_partido (relacion logica)"
+Lista2023 ||--o{ Candidato2023 : "cod_lista (relacion logica)"
+
+note bottom of Lista2023
+  Alcance temporal validado: PASO 2023.
+  1.004 listas; todas poseen un partido existente.
+  42 partidos distintos tienen listas.
+end note
+
+note bottom of Candidato2023
+  15.247 candidatos; todos poseen una lista existente.
+  Las 1.004 listas tienen candidatos.
+end note
+
+legend bottom
+  |= Linea |= Significado |
+  | Solida | Relacion del dominio |
+  | Relacion logica | Validada con datos, pero no declarada como FK |
+endlegend
+@enduml

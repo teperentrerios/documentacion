@@ -1,0 +1,100 @@
+@startuml
+title teper_elecciones - Modelo relacional propuesto (PASO 2023)
+
+hide methods
+skinparam linetype ortho
+skinparam shadowing false
+
+entity "partidospoliticos_2023" as pp23 {
+  * codigo : INT NOT NULL AUTO_INCREMENT <<PK>>
+  --
+  nro_partido : VARCHAR(10) NULL
+  descripcion : VARCHAR(255) NOT NULL
+  cod_jurisdiccion : INT NOT NULL <<IX>>
+  cod_localidad : INT NULL <<IX>>
+  color : VARCHAR(20) NULL
+  color_primario : VARCHAR(20) NULL
+  color_secundario : VARCHAR(20) NULL
+}
+
+entity "listas_paso_2023" as lp23 {
+  * codigo : INT NOT NULL AUTO_INCREMENT <<PK>>
+  --
+  cod_partido : INT NOT NULL <<IX>>
+  nro : VARCHAR(6) NULL
+  descripcion : VARCHAR(255) NOT NULL
+  cod_jurisdiccion : INT NOT NULL <<IX>>
+  cod_cargo_electivo : INT NOT NULL <<IX>>
+  cod_seccion : INT NULL <<IX>>
+  cod_localidad : INT NULL <<IX>>
+  cod_estado : INT NOT NULL = 1 <<IX>>
+  bandera_generales : CHAR(1) NOT NULL = 'N'
+  fecha_baja : DATETIME NULL
+  cod_usuario_baja : INT NULL
+  motivo_baja : LONGTEXT NULL
+  cod_usuario_crea : INT NOT NULL <<IX>>
+  fecha_hora_crea : DATETIME NOT NULL
+  ip_crea : VARCHAR(20) NOT NULL
+  cod_usuario_presenta : INT NULL <<IX>>
+  fecha_hora_presenta : DATETIME NULL
+  ip_presenta : VARCHAR(20) NULL
+  cod_usuario_recibe : INT NULL
+  fecha_hora_recibe : DATETIME NULL
+  observada : CHAR(1) NOT NULL = 'N'
+  anexa_documentacion : CHAR(1) NOT NULL = 'N'
+  observaciones_teper : LONGTEXT NULL
+  fecha_hora_observacion_teper : DATETIME NULL
+  cod_usuario_observacion_teper : INT NULL
+  fecha_hora_aceptada : DATETIME NULL
+  cod_usuario_aceptada : INT NULL
+  fecha_hora_no_aceptada : DATETIME NULL
+  cod_usuario_no_aceptada : INT NULL
+  fecha_hora_oficializada : DATETIME NULL
+  cod_usuario_oficializada : INT NULL
+}
+
+entity "candidatos_paso_2023" as cp23 {
+  * codigo : INT NOT NULL AUTO_INCREMENT <<PK>>
+  --
+  cod_lista : INT NOT NULL <<IX>>
+  cod_cargo : INT NOT NULL <<IX>>
+  orden : INT NOT NULL
+  cod_departamento_senador : INT NULL
+  apellido : VARCHAR(60) NOT NULL
+  nombre : VARCHAR(80) NOT NULL
+  nro_doc : INT NOT NULL
+  fecha_nac : DATE NULL
+  edad : INT NULL
+  domicilio : VARCHAR(255) NOT NULL
+  genero : CHAR(1) NOT NULL
+  cod_departamento_candidato : INT NOT NULL
+  cod_localidad_candidato : INT NULL <<IX>>
+  foto : VARCHAR(255) NULL
+  bandera_senador_generales : CHAR(1) NOT NULL = 'N'
+  fecha_baja : DATETIME NULL
+  observaciones : LONGTEXT NULL
+  anexa_documentacion : CHAR(1) NOT NULL = 'N'
+  desde_padron : CHAR(1) NOT NULL = 'S'
+  cod_da : INT NOT NULL = 1 <<IX>>
+  condenado_firme : CHAR(1) NOT NULL = 'N'
+}
+
+pp23 ||..o{ lp23 : "cod_partido (IX, sin FK)"
+lp23 ||..o{ cp23 : "cod_lista (IX, sin FK)"
+
+note right of lp23
+  No posee claves foraneas declaradas.
+  cod_partido es solamente un indice.
+  Relacion logica validada sin huerfanos.
+end note
+
+note right of cp23
+  No posee claves foraneas declaradas.
+  cod_lista y cod_cargo son solamente indices.
+  Relacion logica cod_lista validada sin huerfanos.
+end note
+
+note bottom
+  Linea punteada: relacion logica respaldada por los datos, sin restriccion FK.
+end note
+@enduml

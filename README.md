@@ -1,0 +1,31 @@
+# Diagramas de `teper_elecciones`
+
+Archivos:
+
+- `01_diagrama_entidad_relacion.puml`: vista conceptual de la cadena electoral PASO 2023.
+- `02_modelo_relacional.puml`: modelo lógico propuesto, con columnas, nulabilidad, claves, índices y valores predeterminados.
+
+## Hallazgos
+
+- Las tres tablas 2023 existen: `partidospoliticos_2023`, `listas_paso_2023` y `candidatos_paso_2023`.
+- El modelo propuesto consolida `partidospoliticos` y `partidospoliticos_2023` en una única entidad: `partidospoliticos_2023`.
+- De `partidospoliticos_2023` se eliminan `bandera_alianza`, `pasa_generales` y `cod_partido`.
+- Se incorporan `color_primario` y `color_secundario`; se conserva el atributo preexistente `color`.
+- `listas_paso_2023` no tiene claves foráneas declaradas; `cod_partido` es un índice.
+- `candidatos_paso_2023` no tiene claves foráneas declaradas.
+- La cadena lógica validada es `partidospoliticos_2023 1:N listas_paso_2023 1:N candidatos_paso_2023`.
+- Hay 1.004 listas pertenecientes a 42 partidos distintos; no existen listas huérfanas.
+- Hay 15.247 candidatos distribuidos entre las 1.004 listas; no existen candidatos huérfanos.
+
+Las relaciones `listas_paso_2023.cod_partido -> partidospoliticos_2023.codigo` y `candidatos_paso_2023.cod_lista -> listas_paso_2023.codigo` están respaldadas por los datos, pero MariaDB no las aplica como restricciones `FOREIGN KEY`.
+
+> Nota: estos cambios describen el modelo objetivo del diagrama. No se modificó la estructura de la base de datos.
+
+## Convenciones
+
+- `PK`: clave primaria.
+- `FK`: clave foránea declarada.
+- `UQ`: restricción única.
+- `IX`: índice sin restricción referencial.
+
+Los archivos se renderizan con PlantUML mediante `plantuml archivo.puml` o cualquier extensión compatible del editor.

@@ -1,0 +1,4 @@
+plantuml.jar
+*.tmp
+.DS_Store
+Thumbs.db
