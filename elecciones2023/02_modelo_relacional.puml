@@ -27,8 +27,6 @@ entity "listas_paso_2023" as lp23 {
   cod_cargo_electivo : INT NOT NULL <<IX>>
   cod_seccion : INT NULL <<IX>>
   cod_localidad : INT NULL <<IX>>
-  cod_estado : INT NOT NULL = 1 <<IX>>
-  bandera_generales : CHAR(1) NOT NULL = 'N'
   fecha_baja : DATETIME NULL
   cod_usuario_baja : INT NULL
   motivo_baja : LONGTEXT NULL
@@ -56,8 +54,8 @@ entity "listas_paso_2023" as lp23 {
 entity "candidatos_paso_2023" as cp23 {
   * codigo : INT NOT NULL AUTO_INCREMENT <<PK>>
   --
-  cod_lista : INT NOT NULL <<IX>>
-  cod_cargo : INT NOT NULL <<IX>>
+  cod_lista : INT NOT NULL <<FK>>
+  cod_cargo : INT NOT NULL <<FK>>
   orden : INT NOT NULL
   cod_departamento_senador : INT NULL
   apellido : VARCHAR(60) NOT NULL
@@ -67,8 +65,8 @@ entity "candidatos_paso_2023" as cp23 {
   edad : INT NULL
   domicilio : VARCHAR(255) NOT NULL
   genero : CHAR(1) NOT NULL
-  cod_departamento_candidato : INT NOT NULL
-  cod_localidad_candidato : INT NULL <<IX>>
+  cod_departamento_candidato : INT NOT NULL <<FK>>
+  cod_localidad_candidato : INT NULL <<FK>>
   foto : VARCHAR(255) NULL
   bandera_senador_generales : CHAR(1) NOT NULL = 'N'
   fecha_baja : DATETIME NULL
@@ -79,8 +77,29 @@ entity "candidatos_paso_2023" as cp23 {
   condenado_firme : CHAR(1) NOT NULL = 'N'
 }
 
+entity "cargos" as cargos {
+  * codigo : INT NOT NULL <<PK>>
+  --
+  descripcion : VARCHAR(100) NOT NULL
+}
+
+entity "secciones" as secciones {
+  * codigo : INT NOT NULL <<PK>>
+  --
+  descripcion : VARCHAR(255) NOT NULL
+}
+
+entity "localidades_2023" as localidades23 {
+  * codigo : INT NOT NULL <<PK>>
+  --
+  descripcion : VARCHAR(255) NOT NULL
+}
+
 pp23 ||..o{ lp23 : "cod_partido (IX, sin FK)"
-lp23 ||..o{ cp23 : "cod_lista (IX, sin FK)"
+lp23 ||--o{ cp23 : "FK cod_lista"
+cargos ||--o{ cp23 : "FK cod_cargo"
+secciones ||--o{ cp23 : "FK cod_departamento_candidato"
+localidades23 ||--o{ cp23 : "FK cod_localidad_candidato"
 
 note right of lp23
   No posee claves foraneas declaradas.
@@ -89,12 +108,13 @@ note right of lp23
 end note
 
 note right of cp23
-  No posee claves foraneas declaradas.
-  cod_lista y cod_cargo son solamente indices.
-  Relacion logica cod_lista validada sin huerfanos.
+  FK propuestas para lista, cargo, departamento y localidad.
+  Lista, cargo y localidad validan sin huerfanos.
+  Departamento requiere corregir 219 valores 0.
 end note
 
 note bottom
+  Linea solida: clave foranea del modelo propuesto.
   Linea punteada: relacion logica respaldada por los datos, sin restriccion FK.
 end note
 @enduml

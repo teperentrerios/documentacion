@@ -32,27 +32,46 @@ entity "LISTAS PASO 2023" as Lista2023 {
   cod_cargo_electivo : INT
   cod_seccion : INT
   cod_localidad : INT
-  cod_estado : INT
-  bandera_generales : CHAR(1)
 }
 
 entity "CANDIDATOS PASO 2023" as Candidato2023 {
   * codigo : INT <<PK>>
   --
-  cod_lista : INT <<indice>>
-  cod_cargo : INT
+  cod_lista : INT <<FK>>
+  cod_cargo : INT <<FK>>
   orden : INT
   apellido : VARCHAR(60)
   nombre : VARCHAR(80)
   nro_doc : INT
   genero : CHAR(1)
-  cod_departamento_candidato : INT
-  cod_localidad_candidato : INT
+  cod_departamento_candidato : INT <<FK>>
+  cod_localidad_candidato : INT <<FK>>
+}
+
+entity "CARGOS" as Cargo {
+  * codigo : INT <<PK>>
+  --
+  descripcion : VARCHAR(100)
+}
+
+entity "SECCIONES" as Seccion {
+  * codigo : INT <<PK>>
+  --
+  descripcion : VARCHAR(255)
+}
+
+entity "LOCALIDADES 2023" as Localidad2023 {
+  * codigo : INT <<PK>>
+  --
+  descripcion : VARCHAR(255)
 }
 
 ' Relaciones logicas validadas con los datos, aunque no estan declaradas como FK.
 Partido2023 ||--o{ Lista2023 : "cod_partido (relacion logica)"
-Lista2023 ||--o{ Candidato2023 : "cod_lista (relacion logica)"
+Lista2023 ||--o{ Candidato2023 : "FK cod_lista"
+Cargo ||--o{ Candidato2023 : "FK cod_cargo"
+Seccion ||--o{ Candidato2023 : "FK cod_departamento_candidato"
+Localidad2023 ||--o{ Candidato2023 : "FK cod_localidad_candidato"
 
 note bottom of Lista2023
   Alcance temporal validado: PASO 2023.
@@ -63,11 +82,14 @@ end note
 note bottom of Candidato2023
   15.247 candidatos; todos poseen una lista existente.
   Las 1.004 listas tienen candidatos.
+  Antes de aplicar la FK de departamento deben corregirse
+  219 registros con cod_departamento_candidato = 0.
 end note
 
 legend bottom
   |= Linea |= Significado |
   | Solida | Relacion del dominio |
+  | FK | Clave foranea del modelo propuesto |
   | Relacion logica | Validada con datos, pero no declarada como FK |
 endlegend
 @enduml
