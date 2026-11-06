@@ -1,9 +1,16 @@
 # Diagramas de `teper_elecciones`
 
-Archivos:
+## Vistas disponibles
 
-- `01_diagrama_entidad_relacion.puml`: vista conceptual de la cadena electoral PASO 2023.
-- `02_modelo_relacional.puml`: modelo lógico propuesto, con columnas, nulabilidad, claves, índices y valores predeterminados.
+- `01_diagrama_entidad_relacion.puml`: vista externa y conceptual. Contiene las entidades, los atributos necesarios para el modelado y sus relaciones. Es el diagrama que se irá depurando.
+- `02_modelo_relacional.puml`: vista técnica completa, con todas las tablas y columnas, nulabilidad, claves, índices y valores predeterminados.
+
+Renderizados:
+
+- `01_diagrama_entidad_relacion.png`
+- `01_diagrama_entidad_relacion.svg`
+- `02_modelo_relacional.png`
+- `02_modelo_relacional.svg`
 
 ## Hallazgos
 
@@ -25,7 +32,7 @@ Las relaciones de lista, cargo y localidad fueron validadas sin registros huérf
 ## Convenciones
 
 - `PK`: clave primaria.
-- `FK`: clave foránea declarada.
+- `FK`: clave foránea del modelo propuesto.
 - `UQ`: restricción única.
 - `IX`: índice sin restricción referencial.
 

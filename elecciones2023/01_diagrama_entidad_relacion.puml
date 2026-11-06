@@ -1,5 +1,5 @@
 @startuml
-title teper_elecciones - Diagrama entidad-relacion (alcance solicitado)
+title teper_elecciones - Diagrama entidad-relacion (PASO 2023)
 
 hide methods
 skinparam linetype ortho
@@ -17,7 +17,6 @@ entity "PARTIDOS POLITICOS 2023" as Partido2023 {
   descripcion : VARCHAR(255)
   cod_jurisdiccion : INT
   cod_localidad : INT
-  color : VARCHAR(20)
   color_primario : VARCHAR(20)
   color_secundario : VARCHAR(20)
 }
@@ -66,7 +65,6 @@ entity "LOCALIDADES 2023" as Localidad2023 {
   descripcion : VARCHAR(255)
 }
 
-' Relaciones logicas validadas con los datos, aunque no estan declaradas como FK.
 Partido2023 ||--o{ Lista2023 : "cod_partido (relacion logica)"
 Lista2023 ||--o{ Candidato2023 : "FK cod_lista"
 Cargo ||--o{ Candidato2023 : "FK cod_cargo"
